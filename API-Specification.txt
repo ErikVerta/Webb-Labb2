@@ -1,0 +1,11 @@
+|         REQUEST         |         PATH         |         RESPONSE         |         DESCRIPTION         |  
+ get                        /courses                ok/not found              Gets all courses from DB
+ get                        /courses/{courseNumber} ok/not found              Gets a single course from DB
+ post                       /courses                created/bad request       Posts a new course to DB 
+ put                        /courses/{id}           ok/bad request            updates a course in DB
+ delete                     /courses/{id}           ok/not found              deletes a course from DB
+ get                        /users                  ok/not found              Gets all users from DB
+ get                        /users/{email}          ok/not found              Gets a single user from DB
+ post                       /users                  created/bad request       Posts a new user to DB 
+ put                        /users/{id}             ok/bad request            updates a user in DB
+ delete                     /users/{id}             ok/not found              deletes a user from DB          
