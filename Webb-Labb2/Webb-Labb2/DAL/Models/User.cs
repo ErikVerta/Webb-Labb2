@@ -9,6 +9,9 @@
         public int PhoneNumber { get; set; }
         public string Address { get; set; }
 
+        public IList<UserCourse> UserCourses { get; set; }
+
+
         public User(int id, string firstName, string lastName, string email, int phoneNumber, string address)
         {
             Id = id;

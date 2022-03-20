@@ -37,17 +37,17 @@ namespace Webb_Labb2.Controllers
             return Ok(temp);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Course course)
+        [HttpPut("{courseNumber}")]
+        public IActionResult Put(int courseNumber, [FromBody] Course course)
         {
-            _courseStorage.UpdateCourse(id, course);
+            _courseStorage.UpdateCourse(courseNumber, course);
             return Ok();
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        [HttpDelete("{courseNumber}")]
+        public IActionResult Delete(int courseNumber)
         {
-            _courseStorage.DeleteCourse(id);
+            _courseStorage.DeleteCourse(courseNumber);
             return Ok();
         }
     }

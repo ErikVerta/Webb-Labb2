@@ -7,7 +7,12 @@
         public string Description { get; set; }
         public string Length { get; set; }
         public bool Status { get; set; }
-       
+
+        public int DifficultyId { get; set; }
+        public Difficulty Difficulty { get; set; }
+
+        public IList<UserCourse> UserCourses { get; set; }
+
 
         public Course(int courseNumber, string title, string description, string length, bool status)
         {

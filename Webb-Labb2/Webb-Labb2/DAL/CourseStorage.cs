@@ -25,8 +25,7 @@ namespace Webb_Labb2.DAL
 
         public ICollection<Course> GetAllCourses()
         {
-            var courses = _courses.Values;
-            return courses;
+            return _courses.Values;
         }
 
         public Course? GetCourse(int courseNumber)
@@ -42,28 +41,31 @@ namespace Webb_Labb2.DAL
             return null;
         }
 
-        public bool UpdateCourse(int id ,Course course)
+        public bool UpdateCourse(int courseNumber ,Course course)
         {
-            if (!_courses.Keys.Contains(id))
+            foreach (var item in _courses)
             {
-                return false;
+                if (item.Value.CourseNumber == courseNumber)
+                {
+                    _courses[item.Key] = course;
+                    return true;
+                }
             }
 
-            _courses[id] = course;
-
-            return true;
+            return false;
         }
 
-        public bool DeleteCourse(int id)
+        public bool DeleteCourse(int courseNumber)
         {
-            if (!_courses.Keys.Contains(id))
+            foreach (var course in _courses)
             {
-                return false;
+                if (course.Value.CourseNumber == courseNumber)
+                {
+                    _courses.Remove(course);
+                }
             }
 
-            _courses.Remove(id);
-
-            return true;
+            return false;
         }
     }
 }
