@@ -8,6 +8,7 @@ namespace Webb_Labb2.DAL
         public DbSet<Course> Courses { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Difficulty> Difficulties { get; set; }
+        public DbSet<UserCourse> UserCourses { get; set; }
 
         public AppContext(DbContextOptions option) : base(option)
         {
