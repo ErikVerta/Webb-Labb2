@@ -1,7 +1,10 @@
-﻿namespace Webb_Labb2.DAL.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Webb_Labb2.DAL.Models
 {
     public record Course
     {
+        [Key]
         public int CourseNumber { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }

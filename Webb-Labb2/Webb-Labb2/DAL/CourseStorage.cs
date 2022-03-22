@@ -1,71 +1,58 @@
-﻿using Webb_Labb2.DAL.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using Webb_Labb2.DAL.Models;
 
 namespace Webb_Labb2.DAL
 {
     public class CourseStorage
     {
-        private readonly IDictionary<int, Course> _courses;
+        private readonly Labb2Context _labb2Context;
 
-        private int _id;
-
-        public CourseStorage()
+        public CourseStorage(Labb2Context labb2Context)
         {
-            _courses = new Dictionary<int, Course>();
+            _labb2Context = labb2Context;
         }
 
         public bool CreateCourse(Course course)
         {
-            if (_courses.Values.Contains(course))
+            if (_labb2Context.Courses.Contains(course))
             {
                 return false;
             }
-            _courses.Add(_id++, course);
+            _labb2Context.Courses.Add(course);
             return true;
         }
 
         public ICollection<Course> GetAllCourses()
         {
-            return _courses.Values;
+            return _labb2Context.Courses.ToList();
         }
 
         public Course? GetCourse(int courseNumber)
         {
-            foreach (var course in _courses)
-            {
-                if (course.Value.CourseNumber == courseNumber)
-                {
-                    return course.Value;
-                }
-            }
-
-            return null;
+            return _labb2Context.Courses.FirstOrDefault(c => c.CourseNumber == courseNumber);
         }
 
         public bool UpdateCourse(int courseNumber ,Course course)
         {
-            foreach (var item in _courses)
+            var existingCourse = _labb2Context.Courses.FirstOrDefault(c => c.CourseNumber == courseNumber);
+            if (existingCourse is null)
             {
-                if (item.Value.CourseNumber == courseNumber)
-                {
-                    _courses[item.Key] = course;
-                    return true;
-                }
+                return false;
             }
-
-            return false;
+            existingCourse = course;
+            return true;
         }
 
         public bool DeleteCourse(int courseNumber)
         {
-            foreach (var course in _courses)
+            var existingCourse = _labb2Context.Courses.FirstOrDefault(c => c.CourseNumber == courseNumber);
+            if (existingCourse is null)
             {
-                if (course.Value.CourseNumber == courseNumber)
-                {
-                    _courses.Remove(course);
-                }
+                return false;
             }
 
-            return false;
+            _labb2Context.Courses.Remove(existingCourse);
+            return true;
         }
     }
 }

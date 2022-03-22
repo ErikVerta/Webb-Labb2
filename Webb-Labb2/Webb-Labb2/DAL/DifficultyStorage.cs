@@ -4,60 +4,57 @@ namespace Webb_Labb2.DAL
 {
     public class DifficultyStorage
     {
-        private readonly IDictionary<int, Difficulty> _difficulties;
+        private readonly Labb2Context _labb2Context;
 
-        private int _id;
-
-        public DifficultyStorage()
+        public DifficultyStorage(Labb2Context labb2Context)
         {
-            _difficulties = new Dictionary<int, Difficulty>();
+            _labb2Context = labb2Context;
         }
 
         public bool CreateDifficulty(Difficulty difficulty)
         {
-            if (_difficulties.Values.Contains(difficulty))
+            if (_labb2Context.Difficulties.Contains(difficulty))
             {
                 return false;
             }
-            _difficulties.Add(_id++, difficulty);
+
+            _labb2Context.Difficulties.Add(difficulty);
+
             return true;
         }
 
         public ICollection<Difficulty> GetAllDifficulties()
         {
-            return _difficulties.Values;
+            return _labb2Context.Difficulties.ToList();
         }
 
         public Difficulty? GetDifficulty(int id)
         {
-            if (!_difficulties.Keys.Contains(id))
-            {
-                return null;
-            }
-
-            return _difficulties[id];
+            return _labb2Context.Difficulties.FirstOrDefault(d => d.Id == id);
         }
 
         public bool UpdateDifficulty(int id, Difficulty difficulty)
         {
-            if (!_difficulties.Keys.Contains(id))
+            var existingDifficulty = _labb2Context.Difficulties.FirstOrDefault(d => d.Id == id);
+            if (existingDifficulty is null)
             {
                 return false;
             }
 
-            _difficulties[id] = difficulty;
+            existingDifficulty = difficulty;
 
             return true;
         }
 
         public bool DeleteDifficulty(int id)
         {
-            if (!_difficulties.Keys.Contains(id))
+            var existingDifficulty = _labb2Context.Difficulties.FirstOrDefault(d => d.Id == id);
+            if (existingDifficulty is null)
             {
                 return false;
             }
 
-            _difficulties.Remove(id);
+            _labb2Context.Difficulties.Remove(existingDifficulty);
 
             return true;
         }

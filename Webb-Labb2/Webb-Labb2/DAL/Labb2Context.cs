@@ -3,14 +3,14 @@ using Webb_Labb2.DAL.Models;
 
 namespace Webb_Labb2.DAL
 {
-    public class AppContext : DbContext
+    public class Labb2Context : DbContext
     {
         public DbSet<Course> Courses { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Difficulty> Difficulties { get; set; }
         public DbSet<UserCourse> UserCourses { get; set; }
 
-        public AppContext(DbContextOptions option) : base(option)
+        public Labb2Context(DbContextOptions option) : base(option)
         {
 
         }

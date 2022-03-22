@@ -4,64 +4,56 @@ namespace Webb_Labb2.DAL
 {
     public class UserStorage
     {
-        private readonly IDictionary<int, User> _users;
+        private readonly Labb2Context _labb2Context;
 
-        private int _id;
-
-        public UserStorage()
+        public UserStorage(Labb2Context labb2Context)
         {
-            _users = new Dictionary<int, User>();
+            _labb2Context = labb2Context;
         }
 
         public bool CreateUser(User user)
         {
-            if (_users.Values.Contains(user))
+            if (_labb2Context.Users.Contains(user))
             {
                 return false;
             }
-            _users.Add(_id++, user);
+
+            _labb2Context.Users.Add(user);
             return true;
         }
 
         public ICollection<User> GetAllUsers()
         {
-            return _users.Values;
+            return _labb2Context.Users.ToList();
         }
 
         public User? GetUser(string email)
         {
-            foreach (var user in _users)
-            {
-                if (user.Value.Email == email)
-                {
-                    return user.Value;
-                }
-            }
-
-            return null;
+            return _labb2Context.Users.FirstOrDefault(u => u.Email == email);
         }
 
         public bool UpdateUser(int id, User user)
         {
-            if (!_users.Keys.Contains(id))
+            var existingUser = _labb2Context.Users.FirstOrDefault(u => u.Id == id);
+            if (existingUser is null)
             {
                 return false;
             }
 
-            _users[id] = user;
+            existingUser = user;
 
             return true;
         }
 
         public bool DeleteUser(int id)
         {
-            if (!_users.Keys.Contains(id))                                              
+            var existingUser = _labb2Context.Users.FirstOrDefault(u => u.Id == id);
+            if (existingUser is null)
             {
                 return false;
             }
 
-            _users.Remove(id);
-
+            _labb2Context.Users.Remove(existingUser);
             return true;
         }
     }
