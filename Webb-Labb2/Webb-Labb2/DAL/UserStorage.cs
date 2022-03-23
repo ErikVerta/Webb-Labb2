@@ -19,6 +19,8 @@ namespace Webb_Labb2.DAL
             }
 
             _labb2Context.Users.Add(user);
+            _labb2Context.SaveChanges();
+
             return true;
         }
 
@@ -41,6 +43,7 @@ namespace Webb_Labb2.DAL
             }
 
             existingUser = user;
+            _labb2Context.SaveChanges();
 
             return true;
         }
@@ -54,6 +57,8 @@ namespace Webb_Labb2.DAL
             }
 
             _labb2Context.Users.Remove(existingUser);
+            _labb2Context.SaveChanges();
+
             return true;
         }
     }

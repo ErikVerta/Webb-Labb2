@@ -19,6 +19,7 @@ namespace Webb_Labb2.DAL
             }
 
             _labb2Context.Difficulties.Add(difficulty);
+            _labb2Context.SaveChanges();
 
             return true;
         }
@@ -42,6 +43,7 @@ namespace Webb_Labb2.DAL
             }
 
             existingDifficulty = difficulty;
+            _labb2Context.SaveChanges();
 
             return true;
         }
@@ -55,6 +57,7 @@ namespace Webb_Labb2.DAL
             }
 
             _labb2Context.Difficulties.Remove(existingDifficulty);
+            _labb2Context.SaveChanges();
 
             return true;
         }

@@ -14,6 +14,7 @@ builder.Services.AddDbContext<Labb2Context>(options =>
 builder.Services.AddScoped<CourseStorage>();
 builder.Services.AddScoped<UserStorage>();
 builder.Services.AddScoped<DifficultyStorage>();
+builder.Services.AddScoped<UserCourseStorage>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

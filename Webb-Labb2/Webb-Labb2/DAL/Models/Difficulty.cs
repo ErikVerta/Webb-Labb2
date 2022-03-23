@@ -7,7 +7,7 @@
 
         
 
-        public Difficulty(int id, string title)
+        public Difficulty(string title)
         {
             Title = title;
         }

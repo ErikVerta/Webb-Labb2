@@ -18,7 +18,10 @@ namespace Webb_Labb2.DAL
             {
                 return false;
             }
+
             _labb2Context.Courses.Add(course);
+
+            _labb2Context.SaveChanges();
             return true;
         }
 
@@ -40,6 +43,8 @@ namespace Webb_Labb2.DAL
                 return false;
             }
             existingCourse = course;
+            _labb2Context.SaveChanges();
+
             return true;
         }
 
@@ -52,6 +57,8 @@ namespace Webb_Labb2.DAL
             }
 
             _labb2Context.Courses.Remove(existingCourse);
+            _labb2Context.SaveChanges();
+
             return true;
         }
     }
