@@ -1,6 +1,6 @@
 |         REQUEST         |         PATH         |         RESPONSE         |         DESCRIPTION         |  
  get                        /courses                ok/not found              Gets all courses from DB
- get                        /courses/{courseNumber} ok/not found              Gets a single course from DB
+ get                        /courses/{CourseNumber} ok/not found              Gets a single course from DB
  post                       /courses                created/bad request       Posts a new course to DB 
  put                        /courses/{id}           ok/bad request            updates a course in DB
  delete                     /courses/{id}           ok/not found              deletes a course from DB

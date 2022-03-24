@@ -15,11 +15,12 @@ builder.Services.AddScoped<CourseStorage>();
 builder.Services.AddScoped<UserStorage>();
 builder.Services.AddScoped<DifficultyStorage>();
 builder.Services.AddScoped<UserCourseStorage>();
-builder.Services.AddRazorPages();
 
 builder.Services.AddControllers();
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -31,6 +32,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.MapRazorPages();
-
 
 app.Run();

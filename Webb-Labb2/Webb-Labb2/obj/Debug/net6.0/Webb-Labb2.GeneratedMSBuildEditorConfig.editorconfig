@@ -15,8 +15,8 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\erik-\OneDrive\Documents\GitHub\labb-2-back-end-ErikVerta\Webb-Labb2\Webb-Labb2
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/erik-/OneDrive/Documents/GitHub/labb-2-back-end-ErikVerta/Webb-Labb2/Webb-Labb2/Pages/Course.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ291cnNlLmNzaHRtbA==
+[C:/Users/erik-/OneDrive/Documents/GitHub/labb-2-back-end-ErikVerta/Webb-Labb2/Webb-Labb2/Pages/Courses.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ291cnNlcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/erik-/OneDrive/Documents/GitHub/labb-2-back-end-ErikVerta/Webb-Labb2/Webb-Labb2/Pages/Error.cshtml]
@@ -33,14 +33,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/erik-/OneDrive/Documents/GitHub/labb-2-back-end-ErikVerta/Webb-Labb2/Webb-Labb2/Pages/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/erik-/OneDrive/Documents/GitHub/labb-2-back-end-ErikVerta/Webb-Labb2/Webb-Labb2/Pages/User.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlci5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/erik-/OneDrive/Documents/GitHub/labb-2-back-end-ErikVerta/Webb-Labb2/Webb-Labb2/Pages/UserCourse.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlckNvdXJzZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/erik-/OneDrive/Documents/GitHub/labb-2-back-end-ErikVerta/Webb-Labb2/Webb-Labb2/Pages/_ViewImports.cshtml]

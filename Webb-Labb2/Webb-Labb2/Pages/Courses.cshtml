@@ -1,0 +1,112 @@
+﻿@page
+@model Webb_Labb2.Pages.CoursesModel
+@{
+    ViewData["Title"] = "Courses";
+}
+
+<html>
+<body>
+<button class="btn btn-primary" id="create-course-btn" onclick="OpenCreateCourseModal();">Create Course</button>
+<table id="course-table">
+    <tr>
+        <th>Title</th>
+        <th>CourseNumber</th>
+        <th>Length</th>
+        <th>Difficulty</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+</table>
+
+<div id="course-modal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Course</h5>
+                <button onclick="CloseCreateCourseModal();" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="course-form">
+                    <label for="title-input">Title:</label>
+                    <input type="text" id="title-input" name="title"/> <br/>
+                    <label for="coursenumber-input">Course Number:</label>
+                    <input type="number" id="coursenumber-input" name="coursenumber"/> <br/>
+                    <label for="length-input">Length:</label>
+                    <input type="text" id="length-input" name="length"/> <br/>
+                    <label for="difficulty-select">Choose a difficulty:</label>
+                    <select id="difficulty-select" name="difficulty">
+                    </select> <br/>
+                    <label for="description-textarea">Description:</label>
+                    <textarea id="description-textarea" name="description"></textarea> <br/>
+                    <input type="radio" id="active-radio" name="status" value="true"/>
+                    <label for="active-radio">Active</label>
+                    <input type="radio" id="inactive-radio" name="status" value="false"/>
+                    <label for="inactive-radio">InActive</label> <br/>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button onclick="CreateCourse();" type="button" class="btn btn-primary" data-dismiss="modal">Create</button>
+                <button onclick="CloseCreateCourseModal();" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let difficultyList = [];
+    fetch("https://localhost:7277/api/Difficulty")
+        .then(function(resp) {
+            return resp.json();
+        })
+        .then(function(data) {
+            const difficultySelect = document.getElementById("difficulty-select");
+            difficultyList = data;
+            data.forEach(function(difficulty) {
+                let option = document.createElement("option");
+                option.value = difficulty.id;
+                option.innerHTML = difficulty.title;
+                difficultySelect.appendChild(option);
+            });
+            console.log(data);
+        });
+
+    function OpenCreateCourseModal() {
+        const courseModal = document.getElementById("course-modal");
+        courseModal.style.display = "block";
+
+    }
+
+    function CloseCreateCourseModal() {
+        const courseModal = document.getElementById("course-modal");
+        courseModal.style.display = "none";
+
+    }
+
+    function CreateCourse() {
+        const form = document.getElementById("course-form").elements;
+        let userCourseList = [];
+        fetch("https://localhost:7277/api/UserCourse")
+            .then(function(resp) {
+                return resp.json();
+            })
+            .then(function(data) {
+                userCourseList = data;
+            });
+        const course = {
+            title: form.namedItem("title").value,
+            courseNumber: form.namedItem("coursenumber").value,
+            length: form.namedItem("length").value,
+            status: (form.namedItem("status").value === "true"),
+            description: form.namedItem("description").value,
+            difficultyId: parseInt(form.namedItem("difficulty").value),
+            difficulty: difficultyList[form.namedItem("difficulty").value - 1],
+            userCourses: userCourseList
+        };
+        console.log(course);
+    }
+</script>
+</body>
+</html>

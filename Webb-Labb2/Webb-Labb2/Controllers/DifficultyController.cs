@@ -20,7 +20,7 @@ namespace Webb_Labb2.Controllers
         public IActionResult Get()
         {
             var difficulties = _difficultyStorage.GetAllDifficulties();
-            return difficulties.Count > 0 ? Ok(difficulties) : NotFound();
+            return difficulties.Count > 0 ? Ok(difficulties) : NotFound(difficulties);
         }
 
         [HttpGet("{id}")]
