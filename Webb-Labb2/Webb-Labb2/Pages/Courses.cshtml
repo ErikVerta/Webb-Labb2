@@ -48,14 +48,71 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button onclick="CreateCourse();" type="button" class="btn btn-primary" data-dismiss="modal">Create</button>
+                <button id="post-course-btn" type="button" class="btn btn-primary" data-dismiss="modal" value="course-form">Create</button>
                 <button onclick="CloseCreateCourseModal();" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
 
+<div id="edit-course-modal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Course</h5>
+                <button onclick="CloseEditCourseModal();" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-form">
+                    <label for="edit-title-input">Title:</label>
+                    <input type="text" id="edit-title-input" name="title"/> <br/>
+                    <label for="edit-coursenumber-input">Course Number:</label>
+                    <input type="number" id="edit-coursenumber-input" name="coursenumber"/> <br/>
+                    <label for="edit-length-input">Length:</label>
+                    <input type="text" id="edit-length-input" name="length"/> <br/>
+                    <label for="edit-difficulty-select">Choose a difficulty:</label>
+                    <select id="edit-difficulty-select" name="difficulty">
+                    </select> <br/>
+                    <label for="edit-description-textarea">Description:</label>
+                    <textarea id="edit-description-textarea" name="description"></textarea> <br/>
+                    <input type="radio" id="edit-active-radio" name="status" value="true"/>
+                    <label for="edit-active-radio">Active</label>
+                    <input type="radio" id="edit-inactive-radio" name="status" value="false"/>
+                    <label for="edit-inactive-radio">InActive</label> <br/>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="update-course-btn" type="button" class="btn btn-primary" data-dismiss="modal" value="edit-form">Update</button>
+                <button onclick="CloseEditCourseModal();" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
+    //Used for storing the course that is being updated.
+    let courseToUpdate = {};
+
+    //Sets up click events for post-course-btn and update-course-btn.
+    document.getElementById("post-course-btn").addEventListener('click',
+        function(event) {
+            const buttonClicked = event.target;
+            PostCourse(CreateCourse(buttonClicked.value));
+        });
+    document.getElementById("update-course-btn").addEventListener('click',
+        function(event) {
+            const buttonClicked = event.target;
+            const course = CreateCourse(buttonClicked.value);
+            UpdateCourse(courseToUpdate.courseNumber, course);
+        });
+
+    //Calls the getCourses method to populate the list with the data from Courses table.
+    GetCourses();
+
+    //Populates the select elements in both create-form and edit-form with data from Difficulties table.
+    //It also saves the data in the difficultyList variable for later use.
     let difficultyList = [];
     fetch("https://localhost:7277/api/Difficulty")
         .then(function(resp) {
@@ -63,16 +120,26 @@
         })
         .then(function(data) {
             const difficultySelect = document.getElementById("difficulty-select");
+            const editDifficultySelect = document.getElementById("edit-difficulty-select");
             difficultyList = data;
             data.forEach(function(difficulty) {
                 let option = document.createElement("option");
                 option.value = difficulty.id;
                 option.innerHTML = difficulty.title;
                 difficultySelect.appendChild(option);
+
             });
-            console.log(data);
+            data.forEach(function(difficulty) {
+                let option = document.createElement("option");
+                option.value = difficulty.id;
+                option.innerHTML = difficulty.title;
+                editDifficultySelect.appendChild(option);
+
+
+            });
         });
 
+    //Open and Close functionality for the create course modal.
     function OpenCreateCourseModal() {
         const courseModal = document.getElementById("course-modal");
         courseModal.style.display = "block";
@@ -85,8 +152,45 @@
 
     }
 
-    function CreateCourse() {
-        const form = document.getElementById("course-form").elements;
+    //Open and close functionality for the edit course modal.
+
+    //Sends a get request with the courseNumber to populate the form elements with the correct data and opens the edit course modal.
+    function OpenEditCourseModal(courseNumber) {
+        const editCourseModal = document.getElementById("edit-course-modal");
+        const form = document.getElementById("edit-form").elements;
+        fetch("https://localhost:7277/api/Course/" + courseNumber)
+            .then(function(resp) {
+                return resp.json();
+            })
+            .then(function(data) {
+                courseToUpdate = data;
+
+                form.namedItem("title").value = data.title;
+                form.namedItem("coursenumber").value = data.courseNumber;
+                form.namedItem("length").value = data.length;
+                form.namedItem("status").value = data.status;
+                form.namedItem("description").value = data.description;
+                if (data.status) {
+                    document.getElementById("edit-active-radio").checked = true;
+                } else {
+                    document.getElementById("edit-inactive-radio").checked = true;
+                }
+                form.namedItem("difficulty").value = data.difficultyId;
+            });
+        editCourseModal.style.display = "block";
+
+    }
+
+    function CloseEditCourseModal(courseNumber) {
+        const editCourseModal = document.getElementById("edit-course-modal");
+        editCourseModal.style.display = "none";
+
+    }
+
+    //Uses the formId parameter to get the right form (edit-form or create-form).
+    //Then it creates a course object using the values from the form elements and returns the object.
+    function CreateCourse(formId) {
+        const form = document.getElementById(formId).elements;
         const course = {
             Title: form.namedItem("title").value,
             CourseNumber: parseInt(form.namedItem("coursenumber").value),
@@ -97,9 +201,84 @@
             Difficulty: difficultyList[parseInt(form.namedItem("difficulty").value) - 1],
             UserCourses: []
         };
-        PostCourse(course);
+        return course;
     }
 
+    //Sends a get request to /Course and populates the table with the data.
+    function GetCourses() {
+        const courseTable = document.getElementById("course-table");
+        while (courseTable.childNodes.length > 2) {
+            courseTable.removeChild(courseTable.lastChild);
+        }
+        fetch("https://localhost:7277/api/Course")
+            .then(function(resp) {
+                return resp.json();
+            })
+            .then(function(data) {
+                data.forEach(function(course) {
+                    const tr = document.createElement("tr");
+                    const titleTh = document.createElement("th");
+                    const courseNumberTh = document.createElement("th");
+                    const lengthTh = document.createElement("th");
+                    const difficultyTh = document.createElement("th");
+                    const descriptionTh = document.createElement("th");
+                    const statusTh = document.createElement("th");
+                    const actionTh = document.createElement("th");
+                    const deleteBtn = document.createElement("button");
+                    const editBtn = document.createElement("button");
+
+                    fetch("https://localhost:7277/api/Difficulty/" + course.difficultyId)
+                        .then(function(resp) {
+                            return resp.json();
+                        })
+                        .then(function(diff) {
+                            difficultyTh.innerHTML = diff.title;
+                        });
+
+                    titleTh.innerHTML = course.title;
+                    courseNumberTh.innerHTML = course.courseNumber;
+                    lengthTh.innerHTML = course.length;
+                    descriptionTh.innerHTML = course.description;
+                    statusTh.innerHTML = course.status;
+                    deleteBtn.innerHTML = "Delete";
+                    deleteBtn.value = course.courseNumber;
+                    deleteBtn.classList.add("btn");
+                    deleteBtn.classList.add("btn-danger");
+                    editBtn.innerHTML = "Edit";
+                    editBtn.value = course.courseNumber;
+                    editBtn.classList.add("btn");
+                    editBtn.classList.add("btn-primary");
+
+                    editBtn.addEventListener('click',
+                        function(event) {
+                            const buttonClicked = event.target;
+                            OpenEditCourseModal(buttonClicked.value);
+
+                        });
+
+                    deleteBtn.addEventListener('click',
+                        function(event) {
+                            const buttonClicked = event.target;
+                            DeleteCourse(buttonClicked.value);
+                        });
+
+                    actionTh.appendChild(editBtn);
+                    actionTh.appendChild(deleteBtn);
+                    tr.appendChild(titleTh);
+                    tr.appendChild(courseNumberTh);
+                    tr.appendChild(lengthTh);
+                    tr.appendChild(difficultyTh);
+                    tr.appendChild(descriptionTh);
+                    tr.appendChild(statusTh);
+                    tr.appendChild(actionTh);
+                    courseTable.appendChild(tr);
+
+                });
+    
+            });
+    }
+
+    //Sends a post request to /Course with the course parameter in the body.
     function PostCourse(course = {}) {
         console.log(course);
         fetch("https://localhost:7277/api/Course",
@@ -110,7 +289,35 @@
                 },
                 body: JSON.stringify(course)
             });
+        GetCourses();
     }
+
+    //Sends a delete request to /Course and uses the courseNumber parameter in the path.
+    function DeleteCourse(courseNumber) {
+        fetch("https://localhost:7277/api/Course/" + courseNumber,
+                {
+                    method: 'DELETE',
+                })
+            .then(function(resp) {
+                return resp.json();
+            })
+            .then(function(data) {
+                console.log(data);
+            });
+    }
+
+    //Sends a put request to /Course and uses the courseNumber parameter in the path and the course parameter in the body.
+    function UpdateCourse(courseNumber, course = {}) {
+        fetch("https://localhost:7277/api/Course/" + courseNumber,
+            {
+                method: 'PUT',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify(course)
+            });
+    }
+
 </script>
 </body>
 </html>

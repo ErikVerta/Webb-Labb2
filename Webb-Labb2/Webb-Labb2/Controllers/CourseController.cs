@@ -33,22 +33,36 @@ namespace Webb_Labb2.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] Course course)
         {
-            var temp = _courseStorage.CreateCourse(course);
-            return Ok(temp);
+            var result = _courseStorage.CreateCourse(course);
+            if (result)
+            {
+                return Ok();
+            }
+
+            return BadRequest($"A course with coursenumber: {course.CourseNumber} already exists.");
         }
 
         [HttpPut("{courseNumber}")]
         public IActionResult Put(int courseNumber, [FromBody] Course course)
         {
-            _courseStorage.UpdateCourse(courseNumber, course);
-            return Ok();
+            var result = _courseStorage.UpdateCourse(courseNumber, course);
+            if (result)
+            {
+                return Ok();
+            }
+
+            return BadRequest($"A course with coursenumber: {course.CourseNumber} already exists.");
         }
 
         [HttpDelete("{courseNumber}")]
         public IActionResult Delete(int courseNumber)
         {
-            _courseStorage.DeleteCourse(courseNumber);
-            return Ok();
+            var result = _courseStorage.DeleteCourse(courseNumber);
+            if (result)
+            {
+                return Ok();
+            }
+            return BadRequest($"A course with coursenumber: {courseNumber} doesn't exists.");
         }
     }
 }

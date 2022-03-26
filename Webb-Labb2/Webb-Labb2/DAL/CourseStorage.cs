@@ -18,7 +18,8 @@ namespace Webb_Labb2.DAL
             var userCourses = _labb2Context.UserCourses.ToList();
             course.Difficulty = difficulty;
             course.UserCourses = userCourses;
-            if (_labb2Context.Courses.Contains(course))
+            var courseNumberExists = _labb2Context.Courses.FirstOrDefault(c => c.CourseNumber == course.CourseNumber);
+            if (_labb2Context.Courses.Contains(course) || courseNumberExists is not null)
             {
                 return false;
             }
@@ -42,11 +43,23 @@ namespace Webb_Labb2.DAL
         public bool UpdateCourse(int courseNumber ,Course course)
         {
             var existingCourse = _labb2Context.Courses.FirstOrDefault(c => c.CourseNumber == courseNumber);
-            if (existingCourse is null)
+            var courseNumberExists =
+                _labb2Context.Courses.FirstOrDefault(c => c.CourseNumber == course.CourseNumber);
+            if (existingCourse is null || courseNumberExists is not null)
             {
                 return false;
             }
-            existingCourse = course;
+            var difficulty = _labb2Context.Difficulties.FirstOrDefault(d => d.Id == course.DifficultyId);
+            var userCourses = _labb2Context.UserCourses.ToList();
+
+            existingCourse.Title = course.Title;
+            existingCourse.Description = course.Description;
+            existingCourse.CourseNumber = course.CourseNumber;
+            existingCourse.Length = course.Length;
+            existingCourse.Status = course.Status;
+            existingCourse.DifficultyId = course.DifficultyId;
+            existingCourse.Difficulty = difficulty;
+            existingCourse.UserCourses = userCourses;
             _labb2Context.SaveChanges();
 
             return true;
