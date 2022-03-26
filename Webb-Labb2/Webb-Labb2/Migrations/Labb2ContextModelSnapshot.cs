@@ -16,7 +16,7 @@ namespace Webb_Labb2.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.3")
+                .HasAnnotation("ProductVersion", "6.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -24,10 +24,7 @@ namespace Webb_Labb2.Migrations
             modelBuilder.Entity("Webb_Labb2.DAL.Models.Course", b =>
                 {
                     b.Property<int>("CourseNumber")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CourseNumber"), 1L, 1);
 
                     b.Property<string>("Description")
                         .IsRequired()

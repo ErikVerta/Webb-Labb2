@@ -87,25 +87,29 @@
 
     function CreateCourse() {
         const form = document.getElementById("course-form").elements;
-        let userCourseList = [];
-        fetch("https://localhost:7277/api/UserCourse")
-            .then(function(resp) {
-                return resp.json();
-            })
-            .then(function(data) {
-                userCourseList = data;
-            });
         const course = {
-            title: form.namedItem("title").value,
-            courseNumber: form.namedItem("coursenumber").value,
-            length: form.namedItem("length").value,
-            status: (form.namedItem("status").value === "true"),
-            description: form.namedItem("description").value,
-            difficultyId: parseInt(form.namedItem("difficulty").value),
-            difficulty: difficultyList[form.namedItem("difficulty").value - 1],
-            userCourses: userCourseList
+            Title: form.namedItem("title").value,
+            CourseNumber: parseInt(form.namedItem("coursenumber").value),
+            Length: form.namedItem("length").value,
+            Status: (form.namedItem("status").value === "true"),
+            Description: form.namedItem("description").value,
+            DifficultyId: parseInt(form.namedItem("difficulty").value),
+            Difficulty: difficultyList[parseInt(form.namedItem("difficulty").value) - 1],
+            UserCourses: []
         };
+        PostCourse(course);
+    }
+
+    function PostCourse(course = {}) {
         console.log(course);
+        fetch("https://localhost:7277/api/Course",
+            {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify(course)
+            });
     }
 </script>
 </body>

@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Webb_Labb2.DAL.Models
 {
     public record Course
     {
-        [Key]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int CourseNumber { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }

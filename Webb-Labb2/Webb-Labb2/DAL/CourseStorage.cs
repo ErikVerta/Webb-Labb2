@@ -14,6 +14,10 @@ namespace Webb_Labb2.DAL
 
         public bool CreateCourse(Course course)
         {
+            var difficulty = _labb2Context.Difficulties.FirstOrDefault(d => d.Id == course.DifficultyId);
+            var userCourses = _labb2Context.UserCourses.ToList();
+            course.Difficulty = difficulty;
+            course.UserCourses = userCourses;
             if (_labb2Context.Courses.Contains(course))
             {
                 return false;
