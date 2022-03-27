@@ -13,7 +13,11 @@ namespace Webb_Labb2.DAL
 
         public bool CreateUserCourse(UserCourse userCourse)
         {
-            if (_labb2Context.UserCourses.Contains(userCourse))
+            var user = _labb2Context.Users.FirstOrDefault(u => u.Id == userCourse.UserId);
+            var course = _labb2Context.Courses.FirstOrDefault(c => c.CourseNumber == userCourse.CourseNumber);
+            userCourse.User = user;
+            userCourse.Course = course;
+            if (_labb2Context.UserCourses.Contains(userCourse) || user is null || course is null)
             {
                 return false;
             }
@@ -28,18 +32,9 @@ namespace Webb_Labb2.DAL
             return _labb2Context.UserCourses.ToList();
         }
 
-        public ICollection<UserCourse> GetUsersCourses(int id)
+        public UserCourse? GetUserCourse(int courseNumber, int id)
         {
-            var usersCourses = new List<UserCourse>();
-            foreach (var userCourse in _labb2Context.UserCourses)
-            {
-                if (userCourse.UserId == id)
-                {
-                    usersCourses.Add(userCourse);
-                }
-            }
-
-            return usersCourses;
+            return _labb2Context.UserCourses.FirstOrDefault(uc => uc.UserId == id && uc.CourseNumber == courseNumber);
         }
 
         public bool UpdateUserCourse(int id, int courseNumber, UserCourse userCourse)

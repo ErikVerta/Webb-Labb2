@@ -1,0 +1,193 @@
+﻿@page
+@model Webb_Labb2.Pages.UserCoursesModel
+@{
+    ViewData["Title"] = "Users";
+}
+
+<html>
+<body>
+<button class="btn btn-primary" id="create-usercourse-btn" onclick="OpenCreateUserCourseModal();">Create UserCourse</button>
+<div class="search-wrapper">
+    <label for="search-input">Search:</label>
+    <input type="search" id="search-input"/>
+</div>
+<table id="usercourse-table">
+    <tr>
+        <th>UserId</th>
+        <th>Name</th>
+        <th>CourseNumber</th>
+        <th>Title</th>
+        <th>Action</th>
+    </tr>
+</table>
+
+<div id="usercourse-modal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create User</h5>
+                <button onclick="CloseCreateUserCourseModal();" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="usercourse-form">
+                    <label for="userid-input">UserId:</label>
+                    <input type="number" id="userid-input" name="userid"/> <br/>
+                    <label for="coursenumber-input">CourseNumber:</label>
+                    <input type="number" id="coursenumber-input" name="coursenumber"/> <br/>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="post-usercourse-btn" type="button" class="btn btn-primary" data-dismiss="modal" value="usercourse-form">Create</button>
+                <button onclick="CloseCreateUserCourseModal();" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //Sets up click events for post-usercourse-btn.
+    document.getElementById("post-usercourse-btn").addEventListener('click',
+        function(event) {
+            const buttonClicked = event.target;
+            PostUserCourse(CreateUserCourse(buttonClicked.value));
+        });
+
+    //Calls the GetUsers method to populate the list with the data from Users table.
+    GetUserCourses();
+
+    //Functionality for the search bar.
+    const searchInput = document.getElementById("search-input");
+    let userCourses = [];
+
+    searchInput.addEventListener('input',
+        function(event) {
+            const value = event.target.value;
+            userCourses.forEach(function(userCourse) {
+                const isVisible = userCourse.userId.toString().includes(value);
+                userCourse.element.classList.toggle("hide", !isVisible);
+
+            });
+        });
+
+    //Open and Close functionality for the create UserCourse modal.
+    function OpenCreateUserCourseModal() {
+        const userCourseModal = document.getElementById("usercourse-modal");
+        userCourseModal.style.display = "block";
+
+    }
+
+    function CloseCreateUserCourseModal() {
+        const userCourseModal = document.getElementById("usercourse-modal");
+        userCourseModal.style.display = "none";
+
+    }
+
+    //Uses the formId parameter to get the right form (edit-form or user-form).
+    //Then it creates a user object using the values from the form elements and returns the object.
+    function CreateUserCourse(formId) {
+        const form = document.getElementById(formId).elements;
+        const userCourse = {
+            userid: parseInt(form.namedItem("userid").value),
+            user: {},
+            coursenumber: parseInt(form.namedItem("coursenumber").value),
+            course: {}
+        };
+        return userCourse;
+    }
+
+    //Sends a get request to /UserCourse and populates the table with the data.
+    function GetUserCourses() {
+        const userCourseTable = document.getElementById("usercourse-table");
+        while (userCourseTable.childNodes.length > 2) {
+            userCourseTable.removeChild(userCourseTable.lastChild);
+        }
+        fetch("https://localhost:7277/api/UserCourse")
+            .then(function(resp) {
+                return resp.json();
+            })
+            .then(function(data) {
+                userCourses = data.map(function(userCourse) {
+                    console.log(userCourse);
+                    const tr = document.createElement("tr");
+                    const userIdTh = document.createElement("th");
+                    const nameTh = document.createElement("th");
+                    const courseNumberTh = document.createElement("th");
+                    const titleTh = document.createElement("th");
+                    const actionTh = document.createElement("th");
+                    const deleteBtn = document.createElement("button");
+
+                    userIdTh.innerHTML = userCourse.userId;
+                    fetch("https://localhost:7277/api/User/" + userCourse.userId)
+                        .then(function(resp) {
+                            return resp.json();
+                        })
+                        .then(function(data) {
+                            nameTh.innerHTML = data.firstName + " " + data.lastName;
+                        });
+                    courseNumberTh.innerHTML = userCourse.courseNumber;
+                    fetch("https://localhost:7277/api/Course/" + userCourse.courseNumber)
+                        .then(function(resp) {
+                            return resp.json();
+                        })
+                        .then(function(data) {
+                            titleTh.innerHTML = data.title;
+                        });
+                    deleteBtn.innerHTML = "Delete";
+                    deleteBtn.value = userCourse.courseNumber + "," + userCourse.userId;
+                    deleteBtn.classList.add("btn");
+                    deleteBtn.classList.add("btn-danger");
+
+                    deleteBtn.addEventListener('click',
+                        function(event) {
+                            const buttonClicked = event.target;
+                            const keys = buttonClicked.value.split(",");
+                            DeleteUserCourse(keys[0], keys[1]);
+                        });
+
+                    actionTh.appendChild(deleteBtn);
+                    tr.appendChild(userIdTh);
+                    tr.appendChild(nameTh);
+                    tr.appendChild(courseNumberTh);
+                    tr.appendChild(titleTh);
+                    tr.appendChild(actionTh);
+                    userCourseTable.appendChild(tr);
+                    return {userId: userCourse.userId, element: tr};
+
+                });
+    
+            });
+    }
+
+    //Sends a post request to /UserCourse with the userCourse parameter in the body.
+    function PostUserCourse(userCourse = {}) {
+        console.log(userCourse);
+        fetch("https://localhost:7277/api/UserCourse",
+            {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify(userCourse)
+            });
+        GetUserCourses();
+    }
+
+    //Sends a delete request to /UserCourse and uses the id and courseNumber parameters in the path.
+    function DeleteUserCourse(courseNumber, id) {
+        fetch("https://localhost:7277/api/UserCourse/" + courseNumber + "/" + id,
+                {
+                    method: 'DELETE',
+                })
+            .then(function(resp) {
+                return resp.json();
+            })
+            .then(function(data) {
+                console.log(data);
+            });
+    }
+
+</script>
+</body>
+</html>

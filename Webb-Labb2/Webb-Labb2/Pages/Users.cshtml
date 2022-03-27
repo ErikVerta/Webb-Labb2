@@ -162,8 +162,8 @@
 
     }
 
-    //Uses the formId parameter to get the right form (edit-form or create-form).
-    //Then it creates a course object using the values from the form elements and returns the object.
+    //Uses the formId parameter to get the right form (edit-form or user-form).
+    //Then it creates a user object using the values from the form elements and returns the object.
     function CreateUser(formId) {
         const form = document.getElementById(formId).elements;
         const user = {

@@ -23,18 +23,23 @@ namespace Webb_Labb2.Controllers
             return userCourses.Count > 0 ? Ok(userCourses) : NotFound();
         }
 
-        [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        [HttpGet("{courseNumber}/{id}")]
+        public IActionResult Get(int courseNumber, int id)
         {
-            var usersCourses = _userCourseStorage.GetUsersCourses(id);
-            return usersCourses is not null ? Ok(usersCourses) : NotFound();
+            var userCourse = _userCourseStorage.GetUserCourse(courseNumber, id);
+            return userCourse is not null ? Ok(userCourse) : NotFound();
         }
 
         [HttpPost]
         public IActionResult Post([FromBody] UserCourse userCourse)
         {
-            _userCourseStorage.CreateUserCourse(userCourse);
-            return Ok();
+            var result = _userCourseStorage.CreateUserCourse(userCourse);
+            if (result)
+            {
+                return Ok();
+            }
+
+            return BadRequest();
         }
 
         [HttpPut("{courseNumber}/{id}")]
