@@ -13,6 +13,8 @@ namespace Webb_Labb2.DAL
 
         public bool CreateUser(User user)
         {
+            var userCourses = _labb2Context.UserCourses.ToList();
+            user.UserCourses = userCourses;
             if (_labb2Context.Users.Contains(user))
             {
                 return false;
@@ -29,9 +31,9 @@ namespace Webb_Labb2.DAL
             return _labb2Context.Users.ToList();
         }
 
-        public User? GetUser(string email)
+        public User? GetUser(int id)
         {
-            return _labb2Context.Users.FirstOrDefault(u => u.Email == email);
+            return _labb2Context.Users.FirstOrDefault(u => u.Id == id);
         }
 
         public bool UpdateUser(int id, User user)
@@ -42,7 +44,12 @@ namespace Webb_Labb2.DAL
                 return false;
             }
 
-            existingUser = user;
+            existingUser.FirstName = user.FirstName;
+            existingUser.LastName = user.LastName;
+            existingUser.Email = user.Email;
+            existingUser.PhoneNumber = user.PhoneNumber;
+            existingUser.Address = user.Address;
+
             _labb2Context.SaveChanges();
 
             return true;

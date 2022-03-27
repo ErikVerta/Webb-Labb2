@@ -1,0 +1,291 @@
+﻿@page
+@model Webb_Labb2.Pages.UsersModel
+@{
+    ViewData["Title"] = "Users";
+}
+
+<html>
+<body>
+<button class="btn btn-primary" id="create-user-btn" onclick="OpenCreateUserModal();">Create User</button>
+<div class="search-wrapper">
+    <label for="search-input">Search:</label>
+    <input type="search" id="search-input"/>
+</div>
+<table id="user-table">
+    <tr>
+        <th>Id</th>
+        <th>FirstName</th>
+        <th>LastName</th>
+        <th>Email</th>
+        <th>PhoneNumber</th>
+        <th>Address</th>
+        <th>Action</th>
+    </tr>
+</table>
+
+<div id="user-modal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create User</h5>
+                <button onclick="CloseCreateUserModal();" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="user-form">
+                    <label for="firstname-input">FirstName:</label>
+                    <input type="text" id="firstname-input" name="firstname"/> <br/>
+                    <label for="lastname-input">LastName:</label>
+                    <input type="text" id="lastname-input" name="lastname"/> <br/>
+                    <label for="email-input">Email:</label>
+                    <input type="text" id="email-input" name="email"/> <br/>
+                    <label for="phone-input">PhoneNumber:</label>
+                    <input type="number" id="phone-input" name="phonenumber"/>
+                    <label for="address-input">Address:</label>
+                    <input type="text" id="address-input" name="address"/>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="post-user-btn" type="button" class="btn btn-primary" data-dismiss="modal" value="user-form">Create</button>
+                <button onclick="CloseCreateUserModal();" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="edit-user-modal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Course</h5>
+                <button onclick="CloseEditUserModal();" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-form">
+                    <label for="edit-firstname-input">FirstName:</label>
+                    <input type="text" id="edit-firstname-input" name="firstname"/> <br/>
+                    <label for="edit-lastname-input">LastName:</label>
+                    <input type="text" id="edit-lastname-input" name="lastname"/> <br/>
+                    <label for="edit-email-input">Email:</label>
+                    <input type="text" id="edit-email-input" name="email"/> <br/>
+                    <label for="edit-phone-input">PhoneNumber:</label>
+                    <input type="number" id="edit-phone-input" name="phonenumber"/>
+                    <label for="edit-address-input">Address:</label>
+                    <input type="text" id="edit-address-input" name="address"/>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="update-user-btn" type="button" class="btn btn-primary" data-dismiss="modal" value="edit-form">Update</button>
+                <button onclick="CloseEditUserModal();" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //Used for storing the course that is being updated.
+    let UserToUpdate = {};
+
+    //Sets up click events for post-user-btn and update-user-btn.
+    document.getElementById("post-user-btn").addEventListener('click',
+        function(event) {
+            const buttonClicked = event.target;
+            PostUser(CreateUser(buttonClicked.value));
+        });
+    document.getElementById("update-user-btn").addEventListener('click',
+        function(event) {
+            const buttonClicked = event.target;
+            const user = CreateUser(buttonClicked.value);
+            UpdateUser(UserToUpdate.id, user);
+        });
+
+    //Calls the GetUsers method to populate the list with the data from Users table.
+    GetUsers();
+
+    //Functionality for the search bar.
+    const searchInput = document.getElementById("search-input");
+    let users = [];
+
+    searchInput.addEventListener('input',
+        function(event) {
+            const value = event.target.value;
+            users.forEach(function(user) {
+                const isVisible = user.email.includes(value);
+                user.element.classList.toggle("hide", !isVisible);
+
+            });
+        });
+
+    //Open and Close functionality for the create user modal.
+    function OpenCreateUserModal() {
+        const userModal = document.getElementById("user-modal");
+        userModal.style.display = "block";
+
+    }
+
+    function CloseCreateUserModal() {
+        const userModal = document.getElementById("user-modal");
+        userModal.style.display = "none";
+
+    }
+
+    //Open and close functionality for the edit user modal.
+
+    //Sends a get request with the id to populate the form elements with the correct data and opens the edit user modal.
+    function OpenEditUserModal(id) {
+        const editUserModal = document.getElementById("edit-user-modal");
+        const form = document.getElementById("edit-form").elements;
+        fetch("https://localhost:7277/api/User/" + id)
+            .then(function(resp) {
+                return resp.json();
+            })
+            .then(function(data) {
+                UserToUpdate = data;
+
+                form.namedItem("firstname").value = data.firstName;
+                form.namedItem("lastname").value = data.lastName;
+                form.namedItem("email").value = data.email;
+                form.namedItem("phonenumber").value = data.phoneNumber;
+                form.namedItem("address").value = data.address;
+                
+            });
+        editUserModal.style.display = "block";
+
+    }
+
+    function CloseEditUserModal(id) {
+        const editUserModal = document.getElementById("edit-user-modal");
+        editUserModal.style.display = "none";
+
+    }
+
+    //Uses the formId parameter to get the right form (edit-form or create-form).
+    //Then it creates a course object using the values from the form elements and returns the object.
+    function CreateUser(formId) {
+        const form = document.getElementById(formId).elements;
+        const user = {
+            id: 0,
+            firstName: form.namedItem("firstname").value,
+            lastName: form.namedItem("lastname").value,
+            email: form.namedItem("email").value,
+            phoneNumber: form.namedItem("phonenumber").value,
+            address: form.namedItem("address").value,
+            userCourses: []
+    };
+        return user;
+    }
+
+    //Sends a get request to /User and populates the table with the data.
+    function GetUsers() {
+        const userTable = document.getElementById("user-table");
+        while (userTable.childNodes.length > 2) {
+            userTable.removeChild(userTable.lastChild);
+        }
+        fetch("https://localhost:7277/api/User")
+            .then(function(resp) {
+                return resp.json();
+            })
+            .then(function(data) {
+                users = data.map(function(user) {
+                    const tr = document.createElement("tr");
+                    const idTh = document.createElement("th");
+                    const firstNameTh = document.createElement("th");
+                    const lastNameTh = document.createElement("th");
+                    const emailTh = document.createElement("th");
+                    const phoneNumberTh = document.createElement("th");
+                    const addressTh = document.createElement("th");
+                    const actionTh = document.createElement("th");
+                    const deleteBtn = document.createElement("button");
+                    const editBtn = document.createElement("button");
+
+                    idTh.innerHTML = user.id;
+                    firstNameTh.innerHTML = user.firstName;
+                    lastNameTh.innerHTML = user.lastName;
+                    emailTh.innerHTML = user.email;
+                    phoneNumberTh.innerHTML = user.phoneNumber;
+                    addressTh.innerHTML = user.address;
+                    deleteBtn.innerHTML = "Delete";
+                    deleteBtn.value = user.id;
+                    deleteBtn.classList.add("btn");
+                    deleteBtn.classList.add("btn-danger");
+                    editBtn.innerHTML = "Edit";
+                    editBtn.value = user.id;
+                    editBtn.classList.add("btn");
+                    editBtn.classList.add("btn-primary");
+
+                    editBtn.addEventListener('click',
+                        function(event) {
+                            const buttonClicked = event.target;
+                            OpenEditUserModal(buttonClicked.value);
+
+                        });
+
+                    deleteBtn.addEventListener('click',
+                        function(event) {
+                            const buttonClicked = event.target;
+                            DeleteUser(buttonClicked.value);
+                        });
+
+                    actionTh.appendChild(editBtn);
+                    actionTh.appendChild(deleteBtn);
+                    tr.appendChild(idTh);
+                    tr.appendChild(firstNameTh);
+                    tr.appendChild(lastNameTh);
+                    tr.appendChild(emailTh);
+                    tr.appendChild(phoneNumberTh);
+                    tr.appendChild(addressTh);
+                    tr.appendChild(actionTh);
+                    userTable.appendChild(tr);
+                    return {email: user.email, element: tr};
+
+                });
+    
+            });
+    }
+
+    //Sends a post request to /User with the user parameter in the body.
+    function PostUser(user = {}) {
+        console.log(user);
+        fetch("https://localhost:7277/api/User",
+            {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify(user)
+            });
+        GetUsers();
+    }
+
+    //Sends a delete request to /User and uses the id parameter in the path.
+    function DeleteUser(id) {
+        fetch("https://localhost:7277/api/User/" + id,
+                {
+                    method: 'DELETE',
+                })
+            .then(function(resp) {
+                return resp.json();
+            })
+            .then(function(data) {
+                console.log(data);
+            });
+    }
+
+    //Sends a put request to /User and uses the id parameter in the path and the user parameter in the body.
+    function UpdateUser(id, user = {}) {
+        fetch("https://localhost:7277/api/User/" + id,
+            {
+                method: 'PUT',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify(user)
+            });
+    }
+
+</script>
+</body>
+</html>

@@ -7,6 +7,10 @@
 <html>
 <body>
 <button class="btn btn-primary" id="create-course-btn" onclick="OpenCreateCourseModal();">Create Course</button>
+<div class="search-wrapper">
+    <label for="search-input">Search:</label>
+    <input type="search" id="search-input"/>
+</div>
 <table id="course-table">
     <tr>
         <th>Title</th>
@@ -110,6 +114,19 @@
 
     //Calls the getCourses method to populate the list with the data from Courses table.
     GetCourses();
+
+    //Functionality for the search bar.
+    const searchInput = document.getElementById("search-input");
+    let courses = [];
+
+    searchInput.addEventListener('input',
+        function(event) {
+            const value = event.target.value;
+            courses.forEach(function(course) {
+                const isVisible = course.courseNumber.toString().includes(value);
+                course.element.classList.toggle("hide", !isVisible);
+            });
+        });
 
     //Populates the select elements in both create-form and edit-form with data from Difficulties table.
     //It also saves the data in the difficultyList variable for later use.
@@ -215,7 +232,7 @@
                 return resp.json();
             })
             .then(function(data) {
-                data.forEach(function(course) {
+                courses = data.map(function(course) {
                     const tr = document.createElement("tr");
                     const titleTh = document.createElement("th");
                     const courseNumberTh = document.createElement("th");
@@ -272,7 +289,7 @@
                     tr.appendChild(statusTh);
                     tr.appendChild(actionTh);
                     courseTable.appendChild(tr);
-
+                    return {courseNumber: course.courseNumber, element: tr};
                 });
     
             });

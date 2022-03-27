@@ -23,10 +23,10 @@ namespace Webb_Labb2.Controllers
             return users.Count > 0 ? Ok(users) : NotFound();
         }
 
-        [HttpGet("{email}")]
-        public IActionResult Get(string email)
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
         {
-            var user = _userStorage.GetUser(email);
+            var user = _userStorage.GetUser(id);
             return user is not null ? Ok(user) : NotFound();
         }
 
