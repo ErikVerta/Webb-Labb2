@@ -326,6 +326,7 @@
 
     //Sends a put request to /Course and uses the courseNumber parameter in the path and the course parameter in the body.
     function UpdateCourse(courseNumber, course = {}) {
+        console.log(course);
         fetch("https://localhost:7277/api/Course/" + courseNumber,
             {
                 method: 'PUT',

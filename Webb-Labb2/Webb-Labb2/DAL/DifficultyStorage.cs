@@ -42,7 +42,7 @@ namespace Webb_Labb2.DAL
                 return false;
             }
 
-            existingDifficulty = difficulty;
+            existingDifficulty.Title = difficulty.Title;
             _labb2Context.SaveChanges();
 
             return true;

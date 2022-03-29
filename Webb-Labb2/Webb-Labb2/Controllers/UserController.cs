@@ -33,22 +33,37 @@ namespace Webb_Labb2.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] User user)
         {
-            _userStorage.CreateUser(user);
-            return Ok();
+            var result = _userStorage.CreateUser(user);
+            if (result)
+            {
+                return Ok();
+            }
+
+            return BadRequest();
         }
 
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] User user)
         {
-            _userStorage.UpdateUser(id, user);
-            return Ok();
+            var result = _userStorage.UpdateUser(id, user);
+            if (result)
+            {
+                return Ok();
+            }
+
+            return BadRequest();
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            _userStorage.DeleteUser(id);
-            return Ok();
+            var result = _userStorage.DeleteUser(id);
+            if (result)
+            {
+                return Ok();
+            }
+
+            return BadRequest();
         }
     }
 }

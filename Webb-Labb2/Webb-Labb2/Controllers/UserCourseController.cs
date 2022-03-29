@@ -45,15 +45,25 @@ namespace Webb_Labb2.Controllers
         [HttpPut("{courseNumber}/{id}")]
         public IActionResult Put(int id, int courseNumber, [FromBody] UserCourse userCourse)
         {
-            _userCourseStorage.UpdateUserCourse(id, courseNumber, userCourse);
-            return Ok();
+            var result = _userCourseStorage.UpdateUserCourse(id, courseNumber, userCourse);
+            if (result)
+            {
+                return Ok();
+            }
+
+            return BadRequest();
         }
 
         [HttpDelete("{courseNumber}/{id}")]
         public IActionResult Delete(int id, int courseNumber)
         {
-            _userCourseStorage.DeleteUserCourse(id, courseNumber);
-            return Ok();
+            var result = _userCourseStorage.DeleteUserCourse(id, courseNumber);
+            if (result)
+            {
+                return Ok();
+            }
+
+            return BadRequest();
         }
     }
 }

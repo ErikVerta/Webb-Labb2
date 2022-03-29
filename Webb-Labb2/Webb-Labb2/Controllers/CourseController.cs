@@ -20,7 +20,7 @@ namespace Webb_Labb2.Controllers
         public IActionResult Get()
         {
             var courses = _courseStorage.GetAllCourses();
-            return courses.Count > 0 ? Ok(courses) : NotFound(courses);
+            return courses.Count > 0 ? Ok(courses) : NotFound();
         }
 
         [HttpGet("{courseNumber}")]

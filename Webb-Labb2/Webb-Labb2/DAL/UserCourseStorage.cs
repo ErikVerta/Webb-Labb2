@@ -17,6 +17,7 @@ namespace Webb_Labb2.DAL
             var course = _labb2Context.Courses.FirstOrDefault(c => c.CourseNumber == userCourse.CourseNumber);
             userCourse.User = user;
             userCourse.Course = course;
+
             if (_labb2Context.UserCourses.Contains(userCourse) || user is null || course is null)
             {
                 return false;
@@ -46,7 +47,10 @@ namespace Webb_Labb2.DAL
                 return false;
             }
 
-            existingUserCourse = userCourse;
+            existingUserCourse.UserId = userCourse.UserId;
+            existingUserCourse.CourseNumber = userCourse.CourseNumber;
+            existingUserCourse.User = userCourse.User;
+            existingUserCourse.Course = userCourse.Course;
             _labb2Context.SaveChanges();
 
             return true;

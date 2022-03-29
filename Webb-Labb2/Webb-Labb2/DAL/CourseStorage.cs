@@ -44,7 +44,7 @@ namespace Webb_Labb2.DAL
             var existingCourse = _labb2Context.Courses.FirstOrDefault(c => c.CourseNumber == courseNumber);
             var courseNumberExists =
                 _labb2Context.Courses.FirstOrDefault(c => c.CourseNumber == course.CourseNumber);
-            if (existingCourse is null || courseNumberExists is not null)
+            if (existingCourse is null || (courseNumberExists is not null && courseNumber != course.CourseNumber))
             {
                 return false;
             }
@@ -58,7 +58,6 @@ namespace Webb_Labb2.DAL
             existingCourse.Status = course.Status;
             existingCourse.DifficultyId = course.DifficultyId;
             existingCourse.Difficulty = difficulty;
-            existingCourse.UserCourses = userCourses;
             _labb2Context.SaveChanges();
 
             return true;

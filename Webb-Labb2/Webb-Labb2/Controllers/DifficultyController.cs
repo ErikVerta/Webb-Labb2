@@ -20,7 +20,7 @@ namespace Webb_Labb2.Controllers
         public IActionResult Get()
         {
             var difficulties = _difficultyStorage.GetAllDifficulties();
-            return difficulties.Count > 0 ? Ok(difficulties) : NotFound(difficulties);
+            return difficulties.Count > 0 ? Ok(difficulties) : NotFound();
         }
 
         [HttpGet("{id}")]
@@ -33,22 +33,37 @@ namespace Webb_Labb2.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] Difficulty difficulty)
         {
-            _difficultyStorage.CreateDifficulty(difficulty);
-            return Ok();
+            var result = _difficultyStorage.CreateDifficulty(difficulty);
+            if (result)
+            {
+                return Ok();
+            }
+
+            return BadRequest();
         }
 
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] Difficulty difficulty)
         {
-            _difficultyStorage.UpdateDifficulty(id, difficulty);
-            return Ok();
+            var result = _difficultyStorage.UpdateDifficulty(id, difficulty);
+            if (result)
+            {
+                return Ok();
+            }
+
+            return BadRequest();
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            _difficultyStorage.DeleteDifficulty(id);
-            return Ok();
+            var result = _difficultyStorage.DeleteDifficulty(id);
+            if (result)
+            {
+                return Ok();
+            }
+
+            return BadRequest();
         }
     }
 }
