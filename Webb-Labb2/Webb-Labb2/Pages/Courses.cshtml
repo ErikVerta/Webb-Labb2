@@ -112,7 +112,7 @@
             UpdateCourse(courseToUpdate.courseNumber, course);
         });
 
-    //Calls the getCourses method to populate the list with the data from Courses table.
+    //Calls the GetCourses method to populate the list with the data from Courses table.
     GetCourses();
 
     //Functionality for the search bar.
@@ -321,6 +321,7 @@
             .then(function(data) {
                 console.log(data);
             });
+        GetCourses();
     }
 
     //Sends a put request to /Course and uses the courseNumber parameter in the path and the course parameter in the body.
@@ -333,6 +334,7 @@
                 },
                 body: JSON.stringify(course)
             });
+        GetCourses();
     }
 
 </script>

@@ -115,7 +115,6 @@
             users.forEach(function(user) {
                 const isVisible = user.email.includes(value);
                 user.element.classList.toggle("hide", !isVisible);
-
             });
         });
 
@@ -134,7 +133,7 @@
 
     //Open and close functionality for the edit user modal.
 
-    //Sends a get request with the id to populate the form elements with the correct data and opens the edit user modal.
+    //Sends a get request to / User/id to populate the form elements with the correct data and opens the edit user modal.
     function OpenEditUserModal(id) {
         const editUserModal = document.getElementById("edit-user-modal");
         const form = document.getElementById("edit-form").elements;
@@ -248,7 +247,6 @@
 
     //Sends a post request to /User with the user parameter in the body.
     function PostUser(user = {}) {
-        console.log(user);
         fetch("https://localhost:7277/api/User",
             {
                 method: 'POST',
@@ -272,6 +270,7 @@
             .then(function(data) {
                 console.log(data);
             });
+        GetUsers();
     }
 
     //Sends a put request to /User and uses the id parameter in the path and the user parameter in the body.
@@ -284,6 +283,7 @@
                 },
                 body: JSON.stringify(user)
             });
+        GetUsers();
     }
 
 </script>

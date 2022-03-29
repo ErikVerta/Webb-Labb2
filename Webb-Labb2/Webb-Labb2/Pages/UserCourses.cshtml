@@ -109,7 +109,6 @@
             })
             .then(function(data) {
                 userCourses = data.map(function(userCourse) {
-                    console.log(userCourse);
                     const tr = document.createElement("tr");
                     const userIdTh = document.createElement("th");
                     const nameTh = document.createElement("th");
@@ -162,7 +161,6 @@
 
     //Sends a post request to /UserCourse with the userCourse parameter in the body.
     function PostUserCourse(userCourse = {}) {
-        console.log(userCourse);
         fetch("https://localhost:7277/api/UserCourse",
             {
                 method: 'POST',
@@ -186,6 +184,7 @@
             .then(function(data) {
                 console.log(data);
             });
+        GetUserCourses();
     }
 
 </script>
