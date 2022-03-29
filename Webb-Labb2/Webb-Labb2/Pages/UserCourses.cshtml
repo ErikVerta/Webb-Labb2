@@ -89,10 +89,10 @@
     function CreateUserCourse(formId) {
         const form = document.getElementById(formId).elements;
         const userCourse = {
-            userid: parseInt(form.namedItem("userid").value),
-            user: {},
-            coursenumber: parseInt(form.namedItem("coursenumber").value),
-            course: {}
+            userId: parseInt(form.namedItem("userid").value),
+            user: null,
+            courseNumber: parseInt(form.namedItem("coursenumber").value),
+            course: null
         };
         return userCourse;
     }

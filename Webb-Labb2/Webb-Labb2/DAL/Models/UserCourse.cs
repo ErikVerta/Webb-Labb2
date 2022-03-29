@@ -3,9 +3,9 @@
     public record UserCourse
     {
         public int UserId { get; set; }
-        public User User { get; set; }
+        public User? User { get; set; }
 
         public int CourseNumber { get; set; }
-        public Course Course { get; set; }
+        public Course? Course { get; set; }
     }
 }

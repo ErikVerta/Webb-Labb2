@@ -14,7 +14,7 @@ namespace Webb_Labb2.DAL
         public bool CreateUser(User user)
         {
             var userCourses = _labb2Context.UserCourses.ToList();
-            user.UserCourses = userCourses;
+            user.UserCourses = new List<UserCourse>();
             if (_labb2Context.Users.Contains(user))
             {
                 return false;
