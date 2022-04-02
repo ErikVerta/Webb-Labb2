@@ -254,8 +254,10 @@
                     'content-type': 'application/json'
                 },
                 body: JSON.stringify(user)
-            });
-        GetUsers();
+            }).then(function(data) {
+            GetUsers();
+            CloseCreateUserModal();
+        });
     }
 
     //Sends a delete request to /User and uses the id parameter in the path.
@@ -265,12 +267,9 @@
                     method: 'DELETE',
                 })
             .then(function(resp) {
+                GetUsers();
                 return resp.json();
-            })
-            .then(function(data) {
-                console.log(data);
             });
-        GetUsers();
     }
 
     //Sends a put request to /User and uses the id parameter in the path and the user parameter in the body.
@@ -282,8 +281,10 @@
                     'content-type': 'application/json'
                 },
                 body: JSON.stringify(user)
-            });
-        GetUsers();
+            }).then(function(data) {
+            GetUsers();
+            CloseEditUserModal();
+        });
     }
 
 </script>

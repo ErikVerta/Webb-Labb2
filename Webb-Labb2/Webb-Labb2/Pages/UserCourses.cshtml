@@ -168,8 +168,10 @@
                     'content-type': 'application/json'
                 },
                 body: JSON.stringify(userCourse)
-            });
-        GetUserCourses();
+            }).then(function(data) {
+            GetUserCourses();
+            CloseCreateUserCourseModal();
+        });
     }
 
     //Sends a delete request to /UserCourse and uses the id and courseNumber parameters in the path.
@@ -179,12 +181,9 @@
                     method: 'DELETE',
                 })
             .then(function(resp) {
+                GetUserCourses();
                 return resp.json();
-            })
-            .then(function(data) {
-                console.log(data);
             });
-        GetUserCourses();
     }
 
 </script>

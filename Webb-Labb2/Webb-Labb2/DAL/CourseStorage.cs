@@ -44,12 +44,13 @@ namespace Webb_Labb2.DAL
             var existingCourse = _labb2Context.Courses.FirstOrDefault(c => c.CourseNumber == courseNumber);
             var courseNumberExists =
                 _labb2Context.Courses.FirstOrDefault(c => c.CourseNumber == course.CourseNumber);
+
             if (existingCourse is null || (courseNumberExists is not null && courseNumber != course.CourseNumber))
             {
                 return false;
             }
+
             var difficulty = _labb2Context.Difficulties.FirstOrDefault(d => d.Id == course.DifficultyId);
-            var userCourses = _labb2Context.UserCourses.ToList();
 
             existingCourse.Title = course.Title;
             existingCourse.Description = course.Description;
