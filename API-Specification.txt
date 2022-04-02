@@ -1,11 +1,21 @@
-|         REQUEST         |         PATH         |         RESPONSE         |         DESCRIPTION         |  
- get                        /courses                ok/not found              Gets all courses from DB
- get                        /courses/{CourseNumber} ok/not found              Gets a single course from DB
- post                       /courses                created/bad request       Posts a new course to DB 
- put                        /courses/{id}           ok/bad request            updates a course in DB
- delete                     /courses/{id}           ok/not found              deletes a course from DB
- get                        /users                  ok/not found              Gets all users from DB
- get                        /users/{email}          ok/not found              Gets a single user from DB
- post                       /users                  created/bad request       Posts a new user to DB 
- put                        /users/{id}             ok/bad request            updates a user in DB
- delete                     /users/{id}             ok/not found              deletes a user from DB          
+|            REQUEST            |            PATH            |            RESPONSE            |            DESCRIPTION            |  
+ get                             /courses                                ok/not found          Gets all courses from DB
+ get                             /courses/{CourseNumber}                 ok/not found          Gets a single course from DB
+ post                            /courses                                ok/bad request        Posts a new course to DB 
+ put                             /courses/{CourseNumber}                 ok/bad request        Updates a course in DB
+ delete                          /courses/{CourseNumber}                 ok/not found          Deletes a course from DB
+ get                             /users                                  ok/not found          Gets all users from DB
+ get                             /users/{id}                             ok/not found          Gets a single user from DB
+ post                            /users                                  ok/bad request        Posts a new user to DB 
+ put                             /users/{id}                             ok/bad request        Updates a user in DB
+ delete                          /users/{id}                             ok/not found          Deletes a user from DB          
+ get                             /difficulty                             ok/not found          Gets all difficulties from DB
+ get                             /difficulty{id}                         ok/not found          Gets a single difficulty from DB
+ post                            /difficulty                             ok/bad request        Post a new difficulty to DB
+ put                             /difficulty{id}                         ok/bad request        Updates a difficulty in DB
+ delete                          /difficulty{id}                         ok/not found          Deletes a difficulty from DB
+ get                             /usercourses                            ok/not found          Gets all usercourses from DB
+ get                             /usercourses{CourseNumber}/{id}         ok/not found          Gets a single usercourse from DB
+ post                            /usercourses                            ok/bad request        Posts a new usercourse to DB
+ put                             /usercourses{CourseNumber}/{id}         ok/bad request        Updates a usercourse in DB
+ delete                          /usercourses{CourseNumber}/{id}         ok/not found          Deleted a usercourse from DB

@@ -63,7 +63,7 @@ namespace Webb_Labb2.Controllers
                 return Ok();
             }
 
-            return BadRequest();
+            return NotFound();
         }
     }
 }

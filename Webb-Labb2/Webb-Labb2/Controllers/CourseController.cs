@@ -62,7 +62,7 @@ namespace Webb_Labb2.Controllers
             {
                 return Ok();
             }
-            return BadRequest($"A course with coursenumber: {courseNumber} doesn't exists.");
+            return NotFound();
         }
     }
 }
